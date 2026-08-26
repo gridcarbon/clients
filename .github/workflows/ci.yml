@@ -114,6 +114,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      # 和上面的 python job 一样要先安装 —— 漏了这步的话失败的是导入，
+      # 而不是契约，那这个 job 就成了永远红的噪音。
+      - name: Install (editable)
+        working-directory: python
+        run: python -m pip install --quiet -e .
       - name: Python client against the live API
         working-directory: python
         env:
