@@ -1,8 +1,8 @@
 {
   "name": "gridcarbon-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "mcpName": "dev.gridcarbon/gridcarbon-mcp",
-  "description": "MCP server for grid carbon intensity (gCO2eq/kWh) across 45 electricity zones in Europe, the US and Great Britain. No API key required.",
+  "description": "Hourly electricity carbon intensity for 45 zones, from ENTSO-E, EIA and NESO. No API key needed.",
   "keywords": [
     "mcp",
     "modelcontextprotocol",

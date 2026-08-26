@@ -1,0 +1,21 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+  "name": "dev.gridcarbon/gridcarbon-mcp",
+  "description": "Hourly electricity carbon intensity for 45 zones, from ENTSO-E, EIA and NESO. No API key needed.",
+  "repository": {
+    "url": "https://github.com/gridcarbon/clients",
+    "source": "github",
+    "subfolder": "mcp"
+  },
+  "version": "0.1.1",
+  "websiteUrl": "https://gridcarbon.dev",
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "gridcarbon-mcp",
+      "version": "0.1.1",
+      "transport": { "type": "stdio" }
+    }
+  ]
+}
