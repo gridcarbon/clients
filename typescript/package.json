@@ -55,6 +55,7 @@
     "node": ">=18"
   },
   "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
   "scripts": {
