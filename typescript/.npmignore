@@ -1,0 +1,7 @@
+# "files" in package.json is the source of truth; this is belt-and-braces.
+src
+test
+examples
+tsup.config.ts
+tsconfig.json
+.npmignore

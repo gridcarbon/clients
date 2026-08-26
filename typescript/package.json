@@ -1,0 +1,76 @@
+{
+  "name": "gridcarbon",
+  "version": "0.1.0",
+  "description": "Tiny zero-dependency client for the gridcarbon.dev grid carbon intensity API (45 zones across Europe, the US and Great Britain).",
+  "keywords": [
+    "carbon",
+    "carbon-intensity",
+    "co2",
+    "gco2eq",
+    "electricity",
+    "grid",
+    "energy",
+    "sustainability",
+    "green-software",
+    "entsoe",
+    "eia",
+    "neso",
+    "api-client",
+    "sdk"
+  ],
+  "license": "MIT",
+  "author": "gupeng <gupeng1208@gmail.com>",
+  "homepage": "https://gridcarbon.dev",
+  "bugs": {
+    "url": "https://github.com/gupeng1208/gridcarbon-sdks/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      },
+      "default": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run build && node --test test/*.test.js test/*.test.cjs",
+    "test:live": "GRIDCARBON_LIVE=1 node --test test/live.test.js",
+    "prepublishOnly": "npm run typecheck && npm run build && node --test test/*.test.js test/*.test.cjs"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gupeng1208/gridcarbon-sdks.git",
+    "directory": "typescript"
+  }
+}

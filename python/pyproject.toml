@@ -1,0 +1,60 @@
+[build-system]
+requires = ["hatchling>=1.18"]
+build-backend = "hatchling.build"
+
+[project]
+name = "gridcarbon"
+version = "0.1.0"
+description = "Carbon intensity of electricity grids in 45 European and US zones. Zero dependencies."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "gupeng", email = "gupeng1208@gmail.com" }]
+maintainers = [{ name = "gupeng", email = "gupeng1208@gmail.com" }]
+keywords = [
+    "carbon",
+    "carbon-intensity",
+    "co2",
+    "electricity",
+    "grid",
+    "energy",
+    "emissions",
+    "sustainability",
+    "green-software",
+    "entsoe",
+    "eia",
+    "neso",
+    "climate",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Atmospheric Science",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Utilities",
+    "Typing :: Typed",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://gridcarbon.dev"
+Documentation = "https://gridcarbon.dev"
+Repository = "https://github.com/gupeng1208/gridcarbon-sdks"
+Issues = "https://github.com/gupeng1208/gridcarbon-sdks/issues"
+"API status" = "https://api.gridcarbon.dev/v1/health"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/gridcarbon"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/gridcarbon", "tests", "README.md", "LICENSE", "pyproject.toml"]

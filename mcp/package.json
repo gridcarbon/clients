@@ -1,0 +1,67 @@
+{
+  "name": "gridcarbon-mcp",
+  "version": "0.1.0",
+  "mcpName": "dev.gridcarbon/gridcarbon-mcp",
+  "description": "MCP server for grid carbon intensity (gCO2eq/kWh) across 45 electricity zones in Europe, the US and Great Britain. No API key required.",
+  "keywords": [
+    "mcp",
+    "modelcontextprotocol",
+    "model-context-protocol",
+    "claude",
+    "carbon-intensity",
+    "grid",
+    "electricity",
+    "co2",
+    "emissions",
+    "energy",
+    "sustainability",
+    "entsoe",
+    "eia",
+    "neso"
+  ],
+  "homepage": "https://gridcarbon.dev",
+  "bugs": {
+    "url": "https://github.com/gupeng1208/gridcarbon-sdks/issues"
+  },
+  "author": "gupeng1208@gmail.com",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "gridcarbon-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc && chmod +x dist/index.js",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "test": "node scripts/smoke-test.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gupeng1208/gridcarbon-sdks.git",
+    "directory": "mcp"
+  }
+}
