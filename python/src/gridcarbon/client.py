@@ -5,9 +5,9 @@ from __future__ import annotations
 from typing import Any, Dict, List, Optional, Tuple, Union, overload
 
 from . import _http
-from ._time import TimeLike, format_iso
+from ._time import TimeLike, format_iso, parse_iso
 from .errors import ApiError, UnknownZone
-from .models import Reading, Series, Zone
+from .models import IngestionStatus, Reading, Series, SourceStatus, Zone
 
 __all__ = [
     "GridCarbon",
@@ -92,6 +92,31 @@ class GridCarbon:
     def health(self) -> bool:
         """Return ``True`` if the API reports itself healthy."""
         return bool(self._get("/v1/health").get("ok", False))
+
+    def status(self) -> IngestionStatus:
+        """Report whether ingestion is current, per upstream source.
+
+        ``health()`` only tells you the API answered. This tells you whether the
+        numbers it would answer with are fresh, which is the question that
+        actually matters before you act on a value.
+        """
+        d = self._get("/v1/status")
+        return IngestionStatus(
+            ok=bool(d.get("ok", False)),
+            ts=parse_iso(d["ts"]),
+            note=str(d.get("note", "")),
+            sources=[
+                SourceStatus(
+                    source=str(s["source"]),
+                    zones=int(s["zones"]),
+                    freshest_lag_hours=float(s["freshest_lag_hours"]),
+                    stalest_lag_hours=float(s["stalest_lag_hours"]),
+                    stale_after_hours=float(s["stale_after_hours"]),
+                    ok=bool(s["ok"]),
+                )
+                for s in d.get("sources", [])
+            ],
+        )
 
     def zones(self) -> List[Zone]:
         """List every zone the API publishes, ordered as the API returns them.

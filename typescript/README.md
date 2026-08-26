@@ -335,6 +335,24 @@ The API is pre-alpha, has no rate limits yet, and edge-caches `latest` for 5 min
 **Do not poll faster than once every 5 minutes** — you will only get the cached response
 anyway. History begins `2026-08-21`.
 
+### Is the data actually fresh?
+
+`health()` only tells you the API answered. `status()` tells you whether collection
+is keeping up, per upstream — which is the question that matters before you act on
+a number.
+
+```ts
+const st = await gc.status();
+if (!st.ok) {
+  for (const s of st.sources.filter((x) => !x.ok)) {
+    console.warn(`${s.source} is ${s.stalestLagHours}h behind (normal is under ${s.staleAfterHours}h)`);
+  }
+}
+```
+
+Thresholds differ by source on purpose: European feeds publish within hours, EIA is
+routinely most of a day behind on its own schedule.
+
 ## Attribution
 
 Using this data obliges you to credit the upstream sources. Reproduce this notice

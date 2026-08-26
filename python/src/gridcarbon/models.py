@@ -288,3 +288,41 @@ class Series:
             unit=str(payload.get("unit", UNIT)),
             acknowledged=acknowledged,
         )
+
+
+@dataclass(frozen=True)
+class SourceStatus:
+    """How current one upstream's data is.
+
+    ``ok`` compares this source's worst zone against the lag that is normal for
+    that upstream — Europe publishes within hours, EIA can be most of a day
+    behind on its own schedule. A single global threshold would either cry wolf
+    on the US feed or stay silent through a European outage.
+    """
+
+    source: str
+    zones: int
+    freshest_lag_hours: float
+    stalest_lag_hours: float
+    stale_after_hours: float
+    ok: bool
+
+
+@dataclass(frozen=True)
+class IngestionStatus:
+    """Whether collection is keeping up, per source.
+
+    Distinct from :meth:`GridCarbon.health`, which only says the API is
+    reachable. A reachable API serving day-old numbers is the failure worth
+    catching, and it is invisible to a liveness check.
+    """
+
+    ok: bool
+    ts: datetime
+    note: str
+    sources: List[SourceStatus]
+
+    def stale_sources(self) -> List[SourceStatus]:
+        """The sources that are behind, if any."""
+        return [s for s in self.sources if not s.ok]
+

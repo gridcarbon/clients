@@ -261,6 +261,22 @@ The offline suite replaces `gridcarbon._http.urlopen` with a fake and asserts ag
 payloads captured verbatim from the live API. The live suite is skipped unless
 `GRIDCARBON_LIVE=1`, and asserts only on shape and invariants, never on values.
 
+### Is the data actually fresh?
+
+`health()` only tells you the API answered. `status()` tells you whether collection
+is keeping up, per upstream — which is the question that matters before you act on
+a number.
+
+```python
+st = gc.status()
+if not st.ok:
+    for s in st.stale_sources():
+        print(f"{s.source} is {s.stalest_lag_hours}h behind (normal is under {s.stale_after_hours}h)")
+```
+
+Thresholds differ by source on purpose: European feeds publish within hours, EIA is
+routinely most of a day behind on its own schedule.
+
 ## Attribution
 
 Use of the data carries an attribution obligation. If you publish figures derived from this

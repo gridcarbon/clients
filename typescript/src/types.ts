@@ -111,3 +111,35 @@ export interface SeriesOptions extends RequestOptions {
   /** Override the client-level truncation behaviour for this call. */
   onTruncated?: TruncationBehaviour;
 }
+
+/**
+ * How current one upstream's data is.
+ *
+ * `ok` compares this source's worst zone against the lag that is normal for
+ * that upstream — Europe publishes within hours, EIA can be most of a day
+ * behind on its own schedule. One global threshold would either cry wolf on
+ * the US feed or stay silent through a European outage.
+ */
+export interface SourceStatus {
+  source: string;
+  zones: number;
+  freshestLagHours: number;
+  stalestLagHours: number;
+  staleAfterHours: number;
+  ok: boolean;
+}
+
+/**
+ * Whether collection is keeping up, per source.
+ *
+ * Distinct from `health()`, which only says the API answered. A reachable API
+ * serving day-old numbers is the failure worth catching, and a liveness check
+ * cannot see it.
+ */
+export interface IngestionStatus {
+  ok: boolean;
+  ts: Date;
+  note: string;
+  sources: SourceStatus[];
+}
+

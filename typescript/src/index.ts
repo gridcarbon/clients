@@ -37,12 +37,14 @@ export {
 } from "./errors.js";
 
 export type {
+  GridCarbonOptions,
+  IngestionStatus,
+  Reading,
+  RequestOptions,
+  Series,
+  SeriesOptions,
+  SourceStatus,
+  TruncationBehaviour,
   Zone,
   ZoneSource,
-  Reading,
-  Series,
-  GridCarbonOptions,
-  RequestOptions,
-  SeriesOptions,
-  TruncationBehaviour,
 } from "./types.js";

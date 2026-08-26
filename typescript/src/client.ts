@@ -9,6 +9,7 @@ import {
 } from "./errors.js";
 import type {
   GridCarbonOptions,
+  IngestionStatus,
   Reading,
   RequestOptions,
   Series,
@@ -153,6 +154,44 @@ export class GridCarbon {
    * zones.filter((z) => !z.isLifecycle); // -> [ { zone: "GB", ... } ]
    * ```
    */
+  /**
+   * Report whether ingestion is current, per upstream source.
+   *
+   * `health()` only tells you the API answered. This tells you whether the
+   * numbers it would answer with are fresh, which is the question that
+   * actually matters before acting on a value.
+   */
+  async status(options: RequestOptions = {}): Promise<IngestionStatus> {
+    const { body, url } = await this.#request("/v1/status", {}, options);
+    const d = body as {
+      ok?: unknown;
+      ts?: unknown;
+      note?: unknown;
+      sources?: unknown;
+    };
+    if (typeof d.ts !== "string") {
+      throw new MalformedResponseError(url, `expected "ts" to be a string`);
+    }
+    const rawSources = Array.isArray(d.sources) ? d.sources : [];
+    return {
+      ok: d.ok === true,
+      ts: new Date(d.ts),
+      note: typeof d.note === "string" ? d.note : "",
+      sources: rawSources.map((raw) => {
+        const r = raw as Record<string, unknown>;
+        const num = (v: unknown) => (typeof v === "number" && Number.isFinite(v) ? v : 0);
+        return {
+          source: typeof r.source === "string" ? r.source : "",
+          zones: num(r.zones),
+          freshestLagHours: num(r.freshest_lag_hours),
+          stalestLagHours: num(r.stalest_lag_hours),
+          staleAfterHours: num(r.stale_after_hours),
+          ok: r.ok === true,
+        };
+      }),
+    };
+  }
+
   async zones(options: RequestOptions = {}): Promise<Zone[]> {
     const { body, url } = await this.#request("/v1/zones", {}, options);
     const data = (body as { data?: unknown }).data;
