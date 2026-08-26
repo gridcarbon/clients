@@ -1,0 +1,128 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # 每天跑一次：这些包对着一个活的 API，契约漂移了要主动发现，
+  # 而不是等用户来报 bug。
+  schedule:
+    - cron: "23 6 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      # src/ 布局的包必须先安装才可导入，否则 discover 直接 ModuleNotFoundError
+      - name: Install (editable)
+        working-directory: python
+        run: python -m pip install --quiet -e .
+      - name: Unit tests (no network)
+        working-directory: python
+        run: python -m unittest discover -s tests -v
+      - name: Build and install the wheel, then import it from outside the source tree
+        working-directory: python
+        run: |
+          python -m pip install --quiet build
+          python -m build
+          python -m pip install --quiet dist/*.whl
+          cd "$(mktemp -d)"
+          python -c "import gridcarbon; print(gridcarbon.__version__)"
+      - name: Assert zero runtime dependencies
+        working-directory: python
+        run: |
+          deps=$(python -c "import importlib.metadata as m; print(m.requires('gridcarbon') or [])")
+          echo "requires: $deps"
+          test "$deps" = "[]" || { echo "::error::gridcarbon grew a runtime dependency"; exit 1; }
+
+  typescript:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ["18", "20", "22"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - working-directory: typescript
+        run: npm ci
+      - working-directory: typescript
+        run: npm run build
+      - name: Unit tests (no network)
+        working-directory: typescript
+        run: npm test
+      - name: Assert zero runtime dependencies
+        working-directory: typescript
+        run: |
+          deps=$(node -p "JSON.stringify(require('./package.json').dependencies || {})")
+          echo "dependencies: $deps"
+          test "$deps" = "{}" || { echo "::error::gridcarbon grew a runtime dependency"; exit 1; }
+
+  mcp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - working-directory: mcp
+        run: npm ci
+      - working-directory: mcp
+        run: npm run build
+      - name: Server answers tools/list over stdio
+        working-directory: mcp
+        run: |
+          printf '%s\n%s\n' \
+            '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"ci","version":"1"}}}' \
+            '{"jsonrpc":"2.0","id":2,"method":"tools/list"}' \
+            | node dist/index.js > /tmp/mcp.out 2>/dev/null || true
+          node -e '
+            const fs = require("fs");
+            const want = ["get_carbon_intensity","get_intensity_history","list_zones","compare_zones"];
+            const line = fs.readFileSync("/tmp/mcp.out","utf8").split("\n")
+              .map(l => { try { return JSON.parse(l) } catch { return null } })
+              .find(m => m && m.id === 2);
+            if (!line) { console.error("::error::no tools/list response"); process.exit(1) }
+            const got = line.result.tools.map(t => t.name).sort();
+            const missing = want.filter(w => !got.includes(w));
+            if (missing.length) { console.error("::error::missing tools: " + missing); process.exit(1) }
+            console.log("tools ok: " + got.join(", "));
+          '
+
+  live-contract:
+    # 契约测试单独成 job：上游挂了不该让 PR 变红，但要能一眼看到。
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Python client against the live API
+        working-directory: python
+        env:
+          GRIDCARBON_LIVE: "1"
+        run: python -m unittest discover -s tests -p "*live*" -v
+      - working-directory: typescript
+        run: npm ci && npm run build
+      - name: TypeScript client against the live API
+        working-directory: typescript
+        env:
+          GRIDCARBON_LIVE: "1"
+        run: node --test test/live.test.js
