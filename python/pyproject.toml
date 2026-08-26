@@ -49,8 +49,8 @@ dependencies = []
 [project.urls]
 Homepage = "https://gridcarbon.dev"
 Documentation = "https://gridcarbon.dev"
-Repository = "https://github.com/gupeng1208/gridcarbon-sdks"
-Issues = "https://github.com/gupeng1208/gridcarbon-sdks/issues"
+Repository = "https://github.com/gridcarbon/clients"
+Issues = "https://github.com/gridcarbon/clients/issues"
 "API status" = "https://api.gridcarbon.dev/v1/health"
 
 [tool.hatch.build.targets.wheel]

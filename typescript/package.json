@@ -22,7 +22,7 @@
   "author": "gupeng <hello@gridcarbon.dev>",
   "homepage": "https://gridcarbon.dev",
   "bugs": {
-    "url": "https://github.com/gupeng1208/gridcarbon-sdks/issues"
+    "url": "https://github.com/gridcarbon/clients/issues"
   },
   "type": "module",
   "main": "./dist/index.cjs",
@@ -70,7 +70,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gupeng1208/gridcarbon-sdks.git",
+    "url": "git+https://github.com/gridcarbon/clients.git",
     "directory": "typescript"
   }
 }
