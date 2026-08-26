@@ -316,4 +316,4 @@ package itself performs uses Node's built-in `fetch`; Node 18+ is required.
 
 ---
 
-Author: gupeng1208@gmail.com · Homepage: <https://gridcarbon.dev>
+Author: hello@gridcarbon.dev · Homepage: <https://gridcarbon.dev>

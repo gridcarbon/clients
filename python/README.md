@@ -279,4 +279,4 @@ Neither do ENTSO-E or NESO.
 - **Data values** served by the API and returned through this SDK:
   [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
-Author: gupeng &lt;gupeng1208@gmail.com&gt; · [gridcarbon.dev](https://gridcarbon.dev)
+Author: gupeng &lt;hello@gridcarbon.dev&gt; · [gridcarbon.dev](https://gridcarbon.dev)

@@ -357,4 +357,4 @@ Data values retrieved from the API: **CC BY 4.0**.
 ## Links
 
 - API and docs: <https://gridcarbon.dev>
-- Issues: <mailto:gupeng1208@gmail.com>
+- Issues: <mailto:hello@gridcarbon.dev>

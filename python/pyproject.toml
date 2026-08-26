@@ -9,8 +9,8 @@ description = "Carbon intensity of electricity grids in 45 European and US zones
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
-authors = [{ name = "gupeng", email = "gupeng1208@gmail.com" }]
-maintainers = [{ name = "gupeng", email = "gupeng1208@gmail.com" }]
+authors = [{ name = "gupeng", email = "hello@gridcarbon.dev" }]
+maintainers = [{ name = "gupeng", email = "hello@gridcarbon.dev" }]
 keywords = [
     "carbon",
     "carbon-intensity",

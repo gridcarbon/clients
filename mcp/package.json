@@ -23,7 +23,7 @@
   "bugs": {
     "url": "https://github.com/gupeng1208/gridcarbon-sdks/issues"
   },
-  "author": "gupeng1208@gmail.com",
+  "author": "hello@gridcarbon.dev",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
