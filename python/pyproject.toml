@@ -5,10 +5,15 @@ build-backend = "hatchling.build"
 [project]
 name = "gridcarbon"
 version = "0.1.0"
-description = "Carbon intensity of electricity grids in 45 European and US zones. Zero dependencies."
+description = "Carbon intensity of electricity grids in 45 zones across Europe, the US and Great Britain. Zero dependencies."
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
+# DATA-LICENSE.md must reach wheel users too, not just people who read the repo:
+# it carries the CC BY 4.0 terms for the values and the EIA/ENTSO-E/NESO
+# non-endorsement statements. Without this it lands in the sdist only, and
+# almost nobody installs from an sdist.
+license-files = ["LICENSE", "DATA-LICENSE.md"]
 authors = [{ name = "gupeng", email = "hello@gridcarbon.dev" }]
 maintainers = [{ name = "gupeng", email = "hello@gridcarbon.dev" }]
 keywords = [
