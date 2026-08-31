@@ -1,6 +1,6 @@
 {
   "name": "gridcarbon-mcp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "mcpName": "dev.gridcarbon/gridcarbon-mcp",
   "description": "Hourly electricity carbon intensity for 45 zones, from ENTSO-E, EIA and NESO. No API key needed.",
   "keywords": [

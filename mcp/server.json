@@ -7,15 +7,17 @@
     "source": "github",
     "subfolder": "mcp"
   },
-  "version": "0.1.1",
+  "version": "0.1.2",
   "websiteUrl": "https://gridcarbon.dev",
   "packages": [
     {
       "registryType": "npm",
       "registryBaseUrl": "https://registry.npmjs.org",
       "identifier": "gridcarbon-mcp",
-      "version": "0.1.1",
-      "transport": { "type": "stdio" }
+      "version": "0.1.2",
+      "transport": {
+        "type": "stdio"
+      }
     }
   ]
 }
