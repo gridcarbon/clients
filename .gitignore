@@ -6,3 +6,6 @@ build/
 __pycache__/
 .venv/
 .DS_Store
+
+# 官方 MCP Registry 的域名验证私钥 —— 绝不入库
+key.pem
