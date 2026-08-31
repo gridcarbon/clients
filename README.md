@@ -63,7 +63,9 @@ organisations. If you redistribute or display these values, carry the same attri
 
 Client code in this repository: [MIT](LICENSE).
 The derived intensity values served by the API: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
-Upstream data carries its own terms, linked above.
+
+The data terms, the required attribution notice, the upstream sources and their
+non-endorsement statements are all in [DATA-LICENSE.md](DATA-LICENSE.md).
 
 ## Contributing
 

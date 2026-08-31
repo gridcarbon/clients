@@ -48,7 +48,8 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "DATA-LICENSE.md"
   ],
   "sideEffects": false,
   "engines": {

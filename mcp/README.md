@@ -276,7 +276,8 @@ Lifecycle emission factors are IPCC AR5 medians. Methodology:
 ## Licence
 
 - **Source code:** MIT — see [LICENSE](./LICENSE).
-- **Data values:** CC BY 4.0.
+- **Data values:** CC BY 4.0 — see [DATA-LICENSE.md](./DATA-LICENSE.md) for the
+  attribution notice, the upstream sources and their non-endorsement statements.
 
 ## Development
 

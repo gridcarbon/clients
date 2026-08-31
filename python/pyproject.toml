@@ -57,4 +57,4 @@ Issues = "https://github.com/gridcarbon/clients/issues"
 packages = ["src/gridcarbon"]
 
 [tool.hatch.build.targets.sdist]
-include = ["src/gridcarbon", "tests", "README.md", "LICENSE", "pyproject.toml"]
+include = ["src/gridcarbon", "tests", "README.md", "LICENSE", "DATA-LICENSE.md", "pyproject.toml"]

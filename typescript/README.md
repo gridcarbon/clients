@@ -370,7 +370,8 @@ built on it.
 
 Source code: **MIT** — see [LICENSE](./LICENSE).
 
-Data values retrieved from the API: **CC BY 4.0**.
+Data values retrieved from the API: **CC BY 4.0** — see
+[DATA-LICENSE.md](./DATA-LICENSE.md) for the attribution notice and upstream terms.
 
 ## Links
 

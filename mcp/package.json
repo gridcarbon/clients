@@ -35,7 +35,8 @@
     "dist/**/*.js",
     "dist/**/*.d.ts",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "DATA-LICENSE.md"
   ],
   "engines": {
     "node": ">=18"

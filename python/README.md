@@ -293,6 +293,7 @@ Neither do ENTSO-E or NESO.
 
 - **SDK source code:** MIT — see [LICENSE](LICENSE).
 - **Data values** served by the API and returned through this SDK:
-  [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+  [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — see
+  [DATA-LICENSE.md](DATA-LICENSE.md) for the attribution notice and upstream terms.
 
 Author: gupeng &lt;hello@gridcarbon.dev&gt; · [gridcarbon.dev](https://gridcarbon.dev)
