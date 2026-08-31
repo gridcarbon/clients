@@ -82,6 +82,15 @@ jobs:
         run: npm ci
       - working-directory: mcp
         run: npm run build
+      # SERVER_VERSION is what the server reports in serverInfo and sends as its
+      # User-Agent. It silently sat at 0.1.0 through the 0.1.1 release.
+      - name: SERVER_VERSION matches package.json
+        working-directory: mcp
+        run: |
+          pkg=$(node -p 'require("./package.json").version')
+          src=$(node -e 'import("./dist/constants.js").then(m => console.log(m.SERVER_VERSION))')
+          echo "package.json=$pkg  constants=$src"
+          [ "$pkg" = "$src" ] || { echo "::error::version drift: package.json $pkg vs SERVER_VERSION $src"; exit 1; }
       - name: Server answers tools/list over stdio
         working-directory: mcp
         run: |
@@ -101,6 +110,78 @@ jobs:
             if (missing.length) { console.error("::error::missing tools: " + missing); process.exit(1) }
             console.log("tools ok: " + got.join(", "));
           '
+
+  mcp-docker:
+    # There is no Docker on the author's machine, so this job is the only place
+    # the image is ever actually built and run.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Regression guard, not decoration. The author's ~/.npmrc points npm at
+      # registry.npmmirror.com, and regenerating a lockfile there re-pins every
+      # `resolved` URL to that mirror — npm then follows the lockfile host and
+      # does not fall back, so the build would quietly pull its whole dependency
+      # tree from a third-party CDN and fail outright on restricted egress.
+      # Black-holing the mirror makes that regression fail here, loudly.
+      - name: Build with the npm mirror black-holed
+        run: |
+          docker build \
+            --add-host registry.npmmirror.com:127.0.0.1 \
+            --add-host cdn.npmmirror.com:127.0.0.1 \
+            --tag gridcarbon-mcp:ci .
+
+      - name: The build context carries no private key
+        run: |
+          docker build --tag gridcarbon-ctx:ci --file - . <<'EOF'
+          FROM alpine
+          COPY . /ctx
+          RUN found=$(find /ctx \( -name '*.pem' -o -name '*.key' \) -o -name node_modules -type d); \
+              if [ -n "$found" ]; then echo "leaked into build context:"; echo "$found"; exit 1; fi
+          EOF
+
+      # A real handshake, not a smoke test: initialize -> initialized ->
+      # tools/list, run with no network because neither call should need one.
+      - name: Image answers a real MCP handshake over stdio
+        run: |
+          set -euo pipefail
+          printf '%s\n%s\n%s\n' \
+            '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"ci","version":"1"}}}' \
+            '{"jsonrpc":"2.0","method":"notifications/initialized"}' \
+            '{"jsonrpc":"2.0","id":2,"method":"tools/list"}' > /tmp/handshake.jsonl
+          rc=0
+          docker run -i --rm --network none gridcarbon-mcp:ci \
+            < /tmp/handshake.jsonl > /tmp/mcp-docker.out 2> /tmp/mcp-docker.err || rc=$?
+          echo "container exit: $rc"; cat /tmp/mcp-docker.err
+          [ "$rc" -eq 0 ] || { echo "::error::container exited $rc; it should exit 0 when stdin closes"; exit 1; }
+          node -e '
+            const fs = require("fs");
+            const want = ["compare_zones","get_carbon_intensity","get_intensity_history","list_zones"];
+            const fail = m => { console.error("::error::" + m); process.exit(1) };
+            const lines = fs.readFileSync("/tmp/mcp-docker.out","utf8").split("\n").filter(l => l.trim());
+            if (!lines.length) fail("the container wrote nothing to stdout");
+            const msgs = lines.map(l => { try { return JSON.parse(l) } catch { fail("non-JSON on stdout, which breaks every MCP client: " + l.slice(0,200)) } });
+            const init = msgs.find(m => m.id === 1);
+            if (!init || init.error) fail("initialize failed: " + JSON.stringify(init && init.error));
+            if (init.result.serverInfo?.name !== "gridcarbon") fail("serverInfo.name is " + JSON.stringify(init.result.serverInfo?.name));
+            const list = msgs.find(m => m.id === 2);
+            if (!list || list.error) fail("tools/list failed: " + JSON.stringify(list && list.error));
+            const got = list.result.tools.map(t => t.name).sort();
+            const missing = want.filter(w => !got.includes(w));
+            if (missing.length) fail("missing tools: " + missing);
+            console.log("image ok: " + init.result.serverInfo.version + " — " + got.join(", "));
+          '
+
+      # tini is in the image so that this terminates promptly instead of waiting
+      # out the full 10s grace period.
+      - name: docker stop is not ignored
+        run: |
+          id=$(docker run -d -i --rm --network none gridcarbon-mcp:ci)
+          start=$(date +%s)
+          docker stop "$id" > /dev/null
+          elapsed=$(( $(date +%s) - start ))
+          echo "stopped in ${elapsed}s"
+          [ "$elapsed" -lt 5 ] || { echo "::error::SIGTERM ignored — took ${elapsed}s"; exit 1; }
 
   live-contract:
     # 契约测试单独成 job：上游挂了不该让 PR 变红，但要能一眼看到。

@@ -1,0 +1,24 @@
+# An allowlist, deliberately. Without this file the build context is ~94 MB of
+# mostly node_modules — and it carries mcp/key.pem, the MCP Registry domain
+# verification private key. .gitignore keeps that key out of git; Docker does
+# not read .gitignore, so this file is the only thing keeping it out of the
+# build daemon.
+
+# Exclude everything...
+*
+
+# ...then re-admit exactly what the Dockerfile builds from.
+!mcp/package.json
+!mcp/package-lock.json
+!mcp/tsconfig.json
+!mcp/src
+!mcp/LICENSE
+!mcp/DATA-LICENSE.md
+
+# Belt and braces. Last match wins, so no future `!` line above can re-admit a
+# key, a dependency tree, or a stale local build.
+**/*.pem
+**/*.key
+**/node_modules
+**/dist
+.git

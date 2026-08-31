@@ -1,7 +1,10 @@
 /** Shared constants for the gridcarbon MCP server. */
 
 export const SERVER_NAME = "gridcarbon";
-export const SERVER_VERSION = "0.1.0";
+// Must equal the version in package.json. ci.yml asserts it: this constant is
+// what the server reports in serverInfo and in the User-Agent we send upstream,
+// and it silently drifted to 0.1.0 while the package shipped as 0.1.1.
+export const SERVER_VERSION = "0.1.1";
 
 /** Canonical API host. Override with GRIDCARBON_API_URL for local development. */
 export const DEFAULT_API_BASE_URL = "https://api.gridcarbon.dev";
