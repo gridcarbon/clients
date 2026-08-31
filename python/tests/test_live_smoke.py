@@ -29,7 +29,11 @@ class TestLiveApi(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.gc = GridCarbon(user_agent="gridcarbon-python/0.1.0 (live-smoke-test)")
+        # UA 必须匹配不上 `gridcarbon-python/` 前缀：采用度仪表按 UA 认 SDK 用户，
+        # 而这个 job 每次 push / 每个 PR / 每天 06:23 UTC 都跑，跑在 GitHub 托管
+        # runner 的轮转 IP 上、按地址排不掉。不改的话我们自己的 CI 会是仪表盘上
+        # 最像真人的那个「Python 采用者」。
+        cls.gc = GridCarbon(user_agent="gridcarbon-python-smoketest/0.1.0")
 
     def test_health(self) -> None:
         self.assertTrue(self.gc.health())
