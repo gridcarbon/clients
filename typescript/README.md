@@ -331,7 +331,7 @@ by the platform. That is expected and harmless.
 
 ## Politeness
 
-The API is pre-alpha and rate-limited to 60 requests per minute per IP. `latest` carries
+The API is pre-alpha and rate-limited to 60 requests per minute per IP, loosely — Cloudflare's is deliberately permissive and eventually consistent — each isolate counts separately — so bursts well above that usually succeed. Measured 2026-09-01: 150 requests in 14 seconds from one IP, no 429. Treat 60/min as the intent, not the ceiling, and do not build against the headroom. `latest` carries
 `Cache-Control: max-age=300`, but the Worker runs in front of the cache, so honour that
 header yourself rather than expecting the edge to absorb the traffic.
 **Do not poll faster than once every 5 minutes** — you will only get the cached response

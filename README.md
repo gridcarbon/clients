@@ -44,7 +44,7 @@ are at [gridcarbon.dev/methodology](https://gridcarbon.dev/methodology).
 ## Status
 
 Pre-alpha. The archive has been backfilled to 2026-05-24 — about three months — and grows
-hourly. One limit is enforced: 60 requests per minute per IP
+hourly. One limit is configured: 60 requests per minute per IP, loosely enforced — Cloudflare's is deliberately permissive and eventually consistent — each isolate counts separately — so bursts well above that usually succeed. Measured 2026-09-01: 150 requests in 14 seconds from one IP, no 429. Treat 60/min as the intent, not the ceiling, and do not build against the headroom.
 yet — please do not poll faster than every five minutes, which is the edge-cache TTL on
 `/v1/intensity/latest`. Breaking changes are possible before 1.0; they will be noted in
 each package's changelog.
