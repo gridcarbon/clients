@@ -1,15 +1,15 @@
 # gridcarbon
 
 Python client for the [gridcarbon.dev](https://gridcarbon.dev) API — carbon intensity of
-electricity grids across **45 zones** in Europe and the United States.
+electricity grids across **45 zones** in Europe, the United States and Great Britain.
 
 - **Zero runtime dependencies.** Standard library only (`urllib.request`).
 - **Fully typed**, ships `py.typed`.
 - Python **3.9+**.
 - Synchronous and small: four methods, three value types.
 
-> **Status: pre-alpha.** History begins 2026-08-21. The API is unauthenticated and free,
-> and the shape of these responses may still change.
+> **Status: pre-alpha.** History reaches back to 2026-05-24, about three months. The API is
+> unauthenticated and free, and the shape of these responses may still change.
 
 ## Install
 
@@ -248,7 +248,9 @@ Validate against `gc.zones()` if you need certainty.
 ## Polling
 
 `latest` is edge-cached with a 5 minute TTL. Polling faster returns identical bytes.
-No rate limits are enforced yet — please don't make that necessary.
+One limit is enforced: 60 requests per minute per IP, which returns 429 with a
+`Retry-After` header. It applies to every request — the Worker runs in front of the
+cache — so honour the `Cache-Control` headers in your own client.
 
 ## Development
 

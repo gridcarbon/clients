@@ -43,7 +43,8 @@ are at [gridcarbon.dev/methodology](https://gridcarbon.dev/methodology).
 
 ## Status
 
-Pre-alpha. The archive starts 2026-08-21 and grows hourly. No rate limits are enforced
+Pre-alpha. The archive has been backfilled to 2026-05-24 — about three months — and grows
+hourly. One limit is enforced: 60 requests per minute per IP
 yet — please do not poll faster than every five minutes, which is the edge-cache TTL on
 `/v1/intensity/latest`. Breaking changes are possible before 1.0; they will be noted in
 each package's changelog.

@@ -46,7 +46,7 @@ Attribution is a licence condition when you surface these values: ENTSO-E Transp
 Platform / U.S. Energy Information Administration (EIA) / NESO Carbon Intensity API.
 EIA does not endorse this service or any use of it. Data licensed CC BY 4.0.
 
-Status: pre-alpha. No rate limits are enforced, but do not poll faster than once every
+Status: pre-alpha. Rate limit is 60 requests per minute per IP; do not poll faster than once every
 5 minutes.`;
 
 function createServer(): McpServer {

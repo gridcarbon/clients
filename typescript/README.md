@@ -8,7 +8,7 @@ in grams of CO2-equivalent per kilowatt-hour.
 - **Runs everywhere.** Node 18+, browsers, Cloudflare Workers, Deno, Bun.
 - **ESM + CJS + full type declarations.** ~13 kB per build, no `node:` imports.
 - **No API key.** The API is open and CORS-enabled.
-- **Pre-alpha.** The API is young — history starts `2026-08-21` and the shape can still
+- **Pre-alpha.** The API is young — history starts `2026-05-24` and the shape can still
   change. Read [Politeness](#politeness) before you depend on it.
 
 ```
@@ -268,7 +268,7 @@ await gc.series("DE", { start, end, onTruncated: "ignore" }); // or silence it p
 `series.truncated` is set in all three modes.
 
 > The truncation examples above are reproduced from the test suite's stub, not the live
-> API: history only starts `2026-08-21`, so no real window is long enough to reach 5000
+> API: history only starts `2026-05-24`, so no real window is long enough to reach 5000
 > points yet. Everything else in this README is real pasted output.
 
 ## Errors
@@ -331,9 +331,11 @@ by the platform. That is expected and harmless.
 
 ## Politeness
 
-The API is pre-alpha, has no rate limits yet, and edge-caches `latest` for 5 minutes.
+The API is pre-alpha and rate-limited to 60 requests per minute per IP. `latest` carries
+`Cache-Control: max-age=300`, but the Worker runs in front of the cache, so honour that
+header yourself rather than expecting the edge to absorb the traffic.
 **Do not poll faster than once every 5 minutes** — you will only get the cached response
-anyway. History begins `2026-08-21`.
+anyway. History begins `2026-05-24`.
 
 ### Is the data actually fresh?
 

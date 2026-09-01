@@ -218,7 +218,7 @@ in its own table.
 
 > 44 of 45 zones use IPCC AR5 lifecycle emission factors. GB values come from NESO and use OPERATIONAL (combustion-only) emission factors, not the IPCC AR5 lifecycle factors used for the other 44 zones. GB numbers are systematically lower and MUST NOT be compared or ranked against other zones.
 > typical_lag_hours is the usual publication delay, not a guarantee. Always read the ts and age returned by get_carbon_intensity before calling a value current.
-> History starts 2026-08-21T00:00:00Z; nothing earlier exists.
+> History starts 2026-05-24; nothing earlier exists.
 > Attribution required: ENTSO-E Transparency Platform / U.S. Energy Information Administration (EIA) / NESO Carbon Intensity API. EIA does not endorse this service.
 ```
 
@@ -251,7 +251,7 @@ zone codes return an error with near matches rather than a plausible-looking sub
 **4. History starts 2026-08-21.** Nothing exists before that. Missing intervals are
 gaps, not zeros — do not interpolate them.
 
-**5. Pre-alpha.** The API is young. No rate limits are enforced yet, but `/latest` is
+**5. Pre-alpha.** The API is young. It is rate-limited to 60 requests per minute per IP, and `/latest` is
 edge-cached with a 5-minute TTL, so there is nothing to gain from polling faster than
 that. The `/v1/intensity` endpoint caps a response at 5000 points; when that happens the
 tool sets `server_truncated: true` and says loudly that the series is incomplete.
