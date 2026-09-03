@@ -8,8 +8,8 @@ in grams of CO2-equivalent per kilowatt-hour.
 - **Runs everywhere.** Node 18+, browsers, Cloudflare Workers, Deno, Bun.
 - **ESM + CJS + full type declarations.** ~13 kB per build, no `node:` imports.
 - **No API key.** The API is open and CORS-enabled.
-- **Pre-alpha.** The API is young — history starts `2026-05-24` and the shape can still
-  change. Read [Politeness](#politeness) before you depend on it.
+- **Pre-alpha.** The API is young and the shape can still change. History is uneven by region: Great Britain from 2017-09, the 11 US zones from 2019-01, and the 33 European zones from `2026-05-25` — the European archive is shallow because it has not been backfilled yet, not because ENTSO-E stops there.
+  Read [Politeness](#politeness) before you depend on it.
 
 ```
 npm install gridcarbon
@@ -267,9 +267,11 @@ await gc.series("DE", { start, end, onTruncated: "ignore" }); // or silence it p
 
 `series.truncated` is set in all three modes.
 
-> The truncation examples above are reproduced from the test suite's stub, not the live
-> API: history only starts `2026-05-24`, so no real window is long enough to reach 5000
-> points yet. Everything else in this README is real pasted output.
+> The truncation examples above are reproduced from the test suite's stub so the numbers
+> stay stable. The cap itself is real and easy to hit now that history is deep: about
+> 104 days of GB at 30-minute resolution, or about 208 days of any hourly zone, fills 5000
+> points. Page a multi-year request rather than asking for it whole. Everything else in
+> this README is real pasted output.
 
 ## Errors
 
@@ -334,8 +336,8 @@ by the platform. That is expected and harmless.
 The API is pre-alpha and rate-limited to 60 requests per minute per IP, loosely — Cloudflare's is deliberately permissive and eventually consistent — each isolate counts separately — so bursts well above that usually succeed. Measured 2026-09-01: 150 requests in 14 seconds from one IP, no 429. Treat 60/min as the intent, not the ceiling, and do not build against the headroom. `latest` carries
 `Cache-Control: max-age=300`, but the Worker runs in front of the cache, so honour that
 header yourself rather than expecting the edge to absorb the traffic.
-**Do not poll faster than once every 5 minutes** — you will only get the cached response
-anyway. History begins `2026-05-24`.
+**Do not poll faster than once every 5 minutes** — the data only changes hourly, so
+faster polling buys nothing.
 
 ### Is the data actually fresh?
 

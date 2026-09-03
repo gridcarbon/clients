@@ -218,7 +218,7 @@ in its own table.
 
 > 44 of 45 zones use IPCC AR5 lifecycle emission factors. GB values come from NESO and use OPERATIONAL (combustion-only) emission factors, not the IPCC AR5 lifecycle factors used for the other 44 zones. GB numbers are systematically lower and MUST NOT be compared or ranked against other zones.
 > typical_lag_hours is the usual publication delay, not a guarantee. Always read the ts and age returned by get_carbon_intensity before calling a value current.
-> History starts 2026-05-24; nothing earlier exists.
+> History is uneven by region: Great Britain from 2017-09, the 11 US zones from 2019-01, and the 33 European zones from 2026-05-25 — the European archive is shallow because it has not been backfilled yet, not because ENTSO-E stops there.
 > Attribution required: ENTSO-E Transparency Platform / U.S. Energy Information Administration (EIA) / NESO Carbon Intensity API. EIA does not endorse this service.
 ```
 

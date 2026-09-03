@@ -8,8 +8,8 @@ electricity grids across **45 zones** in Europe, the United States and Great Bri
 - Python **3.9+**.
 - Synchronous and small: four methods, three value types.
 
-> **Status: pre-alpha.** History reaches back to 2026-05-24, about three months. The API is
-> unauthenticated and free, and the shape of these responses may still change.
+> **Status: pre-alpha.** History is uneven by region: Great Britain from 2017-09, the 11 US zones from 2019-01, and the 33 European zones from 2026-05-25 — the European archive is shallow because it has not been backfilled yet, not because ENTSO-E stops there.
+> The API is unauthenticated and free, and the shape of these responses may still change.
 
 ## Install
 
