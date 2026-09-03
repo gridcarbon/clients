@@ -247,7 +247,8 @@ Validate against `gc.zones()` if you need certainty.
 
 ## Polling
 
-`latest` is edge-cached with a 5 minute TTL. Polling faster returns identical bytes.
+`latest` carries `Cache-Control: max-age=300`, and the underlying data only changes
+hourly. Polling faster returns identical numbers.
 One limit is configured: 60 requests per minute per IP, which returns 429 with a
 `Retry-After` header. Cloudflare's limiter is deliberately permissive and eventually consistent — each isolate counts separately — so bursts well above that usually succeed. Measured 2026-09-01: 150 requests in 14 seconds from one IP, no 429. Treat 60/min as the intent, not the ceiling, and do not build against the headroom. It applies to every request — the Worker runs in front of the
 cache — so honour the `Cache-Control` headers in your own client.
