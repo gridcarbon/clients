@@ -8,7 +8,7 @@ in grams of CO2-equivalent per kilowatt-hour.
 - **Runs everywhere.** Node 18+, browsers, Cloudflare Workers, Deno, Bun.
 - **ESM + CJS + full type declarations.** ~13 kB per build, no `node:` imports.
 - **No API key.** The API is open and CORS-enabled.
-- **Pre-alpha.** The API is young and the shape can still change. History is uneven by region: Great Britain from 2017-09, the 11 US zones from 2019-01, and the 33 European zones from `2026-05-25` — the European archive is shallow because it has not been backfilled yet, not because ENTSO-E stops there.
+- **Pre-alpha.** The API is young and the shape can still change. History is uneven by region: Great Britain from 2017-09, the 11 US zones from 2019-01, and the 33 European zones from `2024-08` (two years).
   Read [Politeness](#politeness) before you depend on it.
 
 ```

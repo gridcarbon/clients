@@ -43,7 +43,7 @@ are at [gridcarbon.dev/methodology](https://gridcarbon.dev/methodology).
 
 ## Status
 
-Pre-alpha. History is uneven by region: Great Britain from 2017-09, the 11 US zones from 2019-01, and the 33 European zones from 2026-05-25 — the European archive is shallow because it has not been backfilled yet, not because ENTSO-E stops there. It grows
+Pre-alpha. History is uneven by region: Great Britain from 2017-09, the 11 US zones from 2019-01, and the 33 European zones from 2024-08 (two years). It grows
 hourly. One limit is configured: 60 requests per minute per IP, loosely enforced — Cloudflare's is deliberately permissive and eventually consistent — each isolate counts separately — so bursts well above that usually succeed. Measured 2026-09-01: 150 requests in 14 seconds from one IP, no 429. Treat 60/min as the intent, not the ceiling, and do not build against the headroom.
 Please do not poll faster than every five minutes — that is the `Cache-Control` max-age
 on `/v1/intensity/latest`, and the data only changes hourly. Breaking changes are possible before 1.0; they will be noted in
