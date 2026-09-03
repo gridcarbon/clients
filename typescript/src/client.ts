@@ -19,7 +19,7 @@ import type {
 } from "./types.js";
 
 /** Package version, also used in the default `User-Agent`. */
-export const VERSION = "0.1.0";
+export const VERSION = "0.1.1";
 
 /** Default API root. */
 export const DEFAULT_BASE_URL = "https://api.gridcarbon.dev";
@@ -162,7 +162,8 @@ export class GridCarbon {
    * actually matters before acting on a value.
    */
   async status(options: RequestOptions = {}): Promise<IngestionStatus> {
-    const { body, url } = await this.#request("/v1/status", {}, options);
+    // 503 here is a report, not a failure: it means at least one source is behind.
+    const { body, url } = await this.#request("/v1/status", {}, options, [503]);
     const d = body as {
       ok?: unknown;
       ts?: unknown;
@@ -315,6 +316,10 @@ export class GridCarbon {
     path: string,
     params: Record<string, string>,
     options: RequestOptions,
+    // Non-2xx statuses whose body is a documented answer, not an error.
+    // /v1/status answers 503 while an upstream is behind and that 503 carries
+    // the full per-source report — the one time the caller most needs it.
+    accept: readonly number[] = [],
   ): Promise<{ body: unknown; url: string }> {
     const url = buildUrl(this.baseUrl, path, params);
     const doFetch = this.#resolveFetch();
@@ -375,7 +380,7 @@ export class GridCarbon {
       }
     }
 
-    if (!response.ok) {
+    if (!response.ok && !accept.includes(response.status)) {
       const serverMessage =
         parsed && typeof (body as { error?: unknown } | undefined)?.error === "string"
           ? ((body as { error: string }).error)

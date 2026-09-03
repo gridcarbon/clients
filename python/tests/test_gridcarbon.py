@@ -700,3 +700,52 @@ class TestGbComparabilityWorkflow(ClientTestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# --------------------------------------------------------------------------
+# status() during an upstream outage
+# --------------------------------------------------------------------------
+
+
+class TestStatusDuringOutage(ClientTestCase):
+    """/v1/status answers 503 while a source is behind, with the full report in
+    the body. That is the one moment status() is worth calling, so a 503 there
+    must come back as an IngestionStatus, not an exception. Real incident:
+    2026-09-02, ENTSO-E maintenance, a user's status() raised five times in
+    thirty seconds and told them nothing."""
+
+    OUTAGE = {
+        "ok": False,
+        "ts": "2026-09-02T03:20:48Z",
+        "note": "At least one source is behind its expected publication lag.",
+        "sources": [
+            {"source": "eia", "zones": 11, "freshest_lag_hours": 21.0,
+             "stalest_lag_hours": 24.0, "stale_after_hours": 36, "ok": True},
+            {"source": "entsoe", "zones": 33, "freshest_lag_hours": 2.0,
+             "stalest_lag_hours": 76.0, "stale_after_hours": 8, "ok": False},
+        ],
+    }
+
+    def test_503_from_status_is_a_report_not_an_error(self) -> None:
+        client, _ = self.make(http_error(503, self.OUTAGE))
+        s = client.status()
+        self.assertFalse(s.ok)
+        self.assertEqual([x.source for x in s.sources], ["eia", "entsoe"])
+        self.assertFalse(s.sources[1].ok)
+        self.assertEqual(s.sources[1].stalest_lag_hours, 76.0)
+
+    def test_200_from_status_still_works(self) -> None:
+        healthy = dict(self.OUTAGE, ok=True)
+        client, _ = self.make(healthy)
+        self.assertTrue(client.status().ok)
+
+    def test_503_anywhere_else_still_raises(self) -> None:
+        client, _ = self.make(http_error(503, {"error": "upstream unavailable"}))
+        with self.assertRaises(ApiError) as ctx:
+            client.zones()
+        self.assertEqual(ctx.exception.status, 503)
+
+    def test_503_status_with_garbage_body_still_raises(self) -> None:
+        client, _ = self.make(http_error(503, b"<html>edge error</html>"))
+        with self.assertRaises(ApiError):
+            client.status()

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Tuple, Union, overload
+from typing import Sequence, Any, Dict, List, Optional, Tuple, Union, overload
 
 from . import _http
 from ._time import TimeLike, format_iso, parse_iso
@@ -17,7 +17,7 @@ __all__ = [
     "__version__",
 ]
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 DEFAULT_BASE_URL = "https://api.gridcarbon.dev"
 DEFAULT_TIMEOUT = 10.0
@@ -67,10 +67,16 @@ class GridCarbon:
     # -- internals ---------------------------------------------------------
 
     def _get(
-        self, path: str, params: Optional[List[Tuple[str, str]]] = None
+        self,
+        path: str,
+        params: Optional[List[Tuple[str, str]]] = None,
+        *,
+        accept: Sequence[int] = (),
     ) -> Dict[str, Any]:
         url = _http.build_url(self.base_url, path, params)
-        return _http.get_json(url, timeout=self.timeout, user_agent=self.user_agent)
+        return _http.get_json(
+            url, timeout=self.timeout, user_agent=self.user_agent, accept=accept
+        )
 
     @staticmethod
     def _clean_zone(zone: str) -> str:
@@ -100,7 +106,9 @@ class GridCarbon:
         numbers it would answer with are fresh, which is the question that
         actually matters before you act on a value.
         """
-        d = self._get("/v1/status")
+        # 503 here is not a failure: the API answers 503 whenever a source is
+        # behind, and the body is the full report. Treat it as data.
+        d = self._get("/v1/status", accept=(503,))
         return IngestionStatus(
             ok=bool(d.get("ok", False)),
             ts=parse_iso(d["ts"]),

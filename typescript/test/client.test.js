@@ -368,3 +368,46 @@ describe("errors", () => {
     }
   });
 });
+
+describe("status() during an upstream outage", () => {
+  // /v1/status answers 503 while a source is behind, body intact. Real incident
+  // 2026-09-02: ENTSO-E maintenance, a user's status() rejected five times in
+  // thirty seconds and told them nothing.
+  const OUTAGE = {
+    ok: false,
+    ts: "2026-09-02T03:20:48Z",
+    note: "At least one source is behind its expected publication lag.",
+    sources: [
+      { source: "eia", zones: 11, freshest_lag_hours: 21, stalest_lag_hours: 24, stale_after_hours: 36, ok: true },
+      { source: "entsoe", zones: 33, freshest_lag_hours: 2, stalest_lag_hours: 76, stale_after_hours: 8, ok: false },
+    ],
+  };
+
+  it("returns the report on a 503 instead of rejecting", async () => {
+    const f = stubSequence(jsonResponse(OUTAGE, 503));
+    const s = await client(f).status();
+    assert.equal(s.ok, false);
+    assert.deepEqual(s.sources.map((x) => x.source), ["eia", "entsoe"]);
+    assert.equal(s.sources[1].ok, false);
+    assert.equal(s.sources[1].stalestLagHours, 76);
+  });
+
+  it("still works on a 200", async () => {
+    const f = stubSequence(jsonResponse({ ...OUTAGE, ok: true }));
+    assert.equal((await client(f).status()).ok, true);
+  });
+
+  it("a 503 anywhere else still rejects with ApiError", async () => {
+    const f = stubSequence(jsonResponse({ error: "upstream unavailable" }, 503));
+    await assert.rejects(() => client(f).zones(), (err) => {
+      assert.ok(err instanceof ApiError);
+      assert.equal(err.status, 503);
+      return true;
+    });
+  });
+
+  it("a 503 status with a non-JSON body still rejects", async () => {
+    const f = stubSequence(new Response("<html>edge error</html>", { status: 503 }));
+    await assert.rejects(() => client(f).status(), MalformedResponseError);
+  });
+});

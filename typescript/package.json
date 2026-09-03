@@ -1,6 +1,6 @@
 {
   "name": "gridcarbon",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Tiny zero-dependency client for the gridcarbon.dev grid carbon intensity API (45 zones across Europe, the US and Great Britain).",
   "keywords": [
     "carbon",

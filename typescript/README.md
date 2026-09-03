@@ -117,7 +117,7 @@ GB can run *ahead* of wall clock because NESO also publishes a forecast — chec
 | `baseUrl`     | `"https://api.gridcarbon.dev"` | API root. Trailing slashes are stripped.                                 |
 | `fetch`       | global `fetch`                 | Custom implementation. Resolved at call time, so test doubles work.      |
 | `timeoutMs`   | `10000`                        | Per-request timeout. `0` disables it.                                    |
-| `userAgent`   | `gridcarbon-js/0.1.0 (…)`      | Sent on every request. Browsers ignore this header; other runtimes send it. |
+| `userAgent`   | `gridcarbon-js/0.1.1 (…)`      | Sent on every request. Browsers ignore this header; other runtimes send it. |
 | `onTruncated` | `"warn"`                       | `"warn"` \| `"throw"` \| `"ignore"` — see [Truncation](#truncation).     |
 
 The client is stateless. Construct one and share it.

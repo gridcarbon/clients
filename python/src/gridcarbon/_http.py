@@ -63,11 +63,20 @@ def _error_from_body(status: int, raw: bytes, url: str, reason: str) -> ApiError
     )
 
 
-def get_json(url: str, *, timeout: float, user_agent: str) -> Dict[str, Any]:
+def get_json(
+    url: str, *, timeout: float, user_agent: str, accept: Sequence[int] = ()
+) -> Dict[str, Any]:
     """GET ``url`` and return the decoded JSON object.
 
+    ``accept`` lists non-2xx status codes whose body is a documented, well-formed
+    answer rather than an error. ``/v1/status`` deliberately answers 503 while an
+    upstream is behind, and that 503 carries the complete per-source report —
+    the one time the caller most needs it. Swallowing it as an exception threw
+    that report away; a real user hit exactly this five times in thirty seconds
+    on 2026-09-02 during an ENTSO-E outage.
+
     Raises:
-        ApiError: Non-2xx response, or a 2xx body that is not a JSON object.
+        ApiError: Non-2xx response not in ``accept``, or a body that is not a JSON object.
         GridCarbonTimeout: The request exceeded ``timeout``.
         NetworkError: The request never reached an HTTP response.
     """
@@ -92,7 +101,10 @@ def get_json(url: str, *, timeout: float, user_agent: str) -> Dict[str, Any]:
             body = exc.read()
         except Exception:  # pragma: no cover - body already consumed
             body = b""
-        raise _error_from_body(exc.code, body, url, str(getattr(exc, "reason", ""))) from exc
+        if exc.code in accept:
+            raw, status = body, exc.code
+        else:
+            raise _error_from_body(exc.code, body, url, str(getattr(exc, "reason", ""))) from exc
     except socket.timeout as exc:
         raise GridCarbonTimeout(
             "request to {0} timed out after {1}s".format(url, timeout), url=url
@@ -110,7 +122,7 @@ def get_json(url: str, *, timeout: float, user_agent: str) -> Dict[str, Any]:
         # ValueError covers a malformed base_url reaching urlopen.
         raise NetworkError("could not reach {0}: {1}".format(url, exc), url=url) from exc
 
-    if not (200 <= int(status) < 300):  # pragma: no cover - urllib raises first
+    if not (200 <= int(status) < 300 or int(status) in accept):  # pragma: no cover - urllib raises first
         raise _error_from_body(int(status), raw, url, "")
 
     payload = _decode(raw)

@@ -89,12 +89,12 @@ as current, and never label a US figure "live".
 
 ```python
 GridCarbon(base_url="https://api.gridcarbon.dev", timeout=10.0,
-           user_agent="gridcarbon-python/0.1.0")
+           user_agent="gridcarbon-python/0.1.1")
 ```
 
 The client is stateless, holds no connection, and is safe to share between threads.
 If you build something on top of this, please append your own token to the user agent
-(`"gridcarbon-python/0.1.0 myapp/2.1"`) so the operator can tell clients apart.
+(`"gridcarbon-python/0.1.1 myapp/2.1"`) so the operator can tell clients apart.
 
 ### `gc.health() -> bool`
 
