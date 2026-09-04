@@ -68,6 +68,10 @@ The derived intensity values served by the API: [CC BY 4.0](https://creativecomm
 The data terms, the required attribution notice, the upstream sources and their
 non-endorsement statements are all in [DATA-LICENSE.md](DATA-LICENSE.md).
 
+## Citation
+
+A fixed, citable snapshot of the data (1,460,467 hourly values to 2026-09-04) is archived on Zenodo: [doi:10.5281/zenodo.22299989](https://doi.org/10.5281/zenodo.22299989) (CC BY 4.0); the concept DOI [10.5281/zenodo.22299988](https://doi.org/10.5281/zenodo.22299988) always resolves to the latest snapshot. Machine-readable metadata is in [CITATION.cff](CITATION.cff) at the repository root.
+
 ## Contributing
 
 Corrections to the method are genuinely welcome — especially from people who work with

@@ -1,0 +1,43 @@
+cff-version: 1.2.0
+message: >-
+  If you use gridcarbon data or clients in your work, please cite the dataset
+  snapshot below (it has a DOI and a fixed content), or the API if you are
+  citing the live service.
+type: software
+title: gridcarbon clients
+abstract: >-
+  Client libraries (Python, TypeScript, MCP) for gridcarbon, a keyless public
+  API serving hourly electricity grid carbon intensity in gCO2eq/kWh for 45
+  zones: 33 European bidding zones (ENTSO-E), 11 US balancing authorities
+  (EIA-930) and Great Britain (NESO).
+authors:
+  - name: gupeng
+repository-code: https://github.com/gridcarbon/clients
+url: https://gridcarbon.dev
+license: MIT
+keywords:
+  - carbon intensity
+  - electricity
+  - grid
+  - ENTSO-E
+  - EIA-930
+  - NESO
+  - emissions
+preferred-citation:
+  type: dataset
+  title: "gridcarbon hourly grid carbon intensity, 45 zones — snapshot 2026-09-04"
+  authors:
+    - name: gupeng
+  year: 2026
+  publisher:
+    name: Zenodo
+  doi: 10.5281/zenodo.22299989
+  url: https://gridcarbon.dev
+  license: CC-BY-4.0
+  notes: >-
+    Hourly values 2017-09-11 to 2026-09-04 (GB half-hourly). Production-based,
+    generator-terminal, IPCC AR5 lifecycle factors; GB republishes NESO's
+    operational figure and is not comparable in level with the other zones.
+    Concept DOI for all versions: 10.5281/zenodo.22299988.
+    Derived from ENTSO-E Transparency Platform, U.S. EIA and NESO, none of
+    whom endorse this work. Method: https://gridcarbon.dev/methodology

@@ -381,3 +381,7 @@ Data values retrieved from the API: **CC BY 4.0** — see
 
 - API and docs: <https://gridcarbon.dev>
 - Issues: <mailto:hello@gridcarbon.dev>
+
+## Citation
+
+Data snapshot with a DOI: [doi:10.5281/zenodo.22299989](https://doi.org/10.5281/zenodo.22299989) (CC BY 4.0). Citation metadata: [CITATION.cff](https://github.com/gridcarbon/clients/blob/main/CITATION.cff).

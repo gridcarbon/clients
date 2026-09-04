@@ -318,3 +318,7 @@ package itself performs uses Node's built-in `fetch`; Node 18+ is required.
 ---
 
 Author: hello@gridcarbon.dev · Homepage: <https://gridcarbon.dev>
+
+## Citation
+
+Data snapshot with a DOI: [doi:10.5281/zenodo.22299989](https://doi.org/10.5281/zenodo.22299989) (CC BY 4.0). Citation metadata: [CITATION.cff](https://github.com/gridcarbon/clients/blob/main/CITATION.cff).

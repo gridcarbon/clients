@@ -300,3 +300,7 @@ Neither do ENTSO-E or NESO.
   [DATA-LICENSE.md](DATA-LICENSE.md) for the attribution notice and upstream terms.
 
 Author: gupeng &lt;hello@gridcarbon.dev&gt; · [gridcarbon.dev](https://gridcarbon.dev)
+
+## Citation
+
+Data snapshot with a DOI: [doi:10.5281/zenodo.22299989](https://doi.org/10.5281/zenodo.22299989) (CC BY 4.0). Citation metadata: [CITATION.cff](https://github.com/gridcarbon/clients/blob/main/CITATION.cff).
